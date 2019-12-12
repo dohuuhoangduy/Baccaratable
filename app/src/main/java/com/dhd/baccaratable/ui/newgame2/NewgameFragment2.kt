@@ -159,7 +159,7 @@ class NewgameFragment2 : Fragment() {
                 updateDupPatternTable(dupPatternTable, currentGame, ADD)
 
                 updateResult(currentGame, currentGame.coupArray.size - 1)
-                updateResultTable(resultTable, currentGame, ADD)
+                updateResultTable(resultTable, ADD)
 
                 filter(gameArray, currentGame.coupArray)
 
@@ -191,7 +191,7 @@ class NewgameFragment2 : Fragment() {
                 updateDupPatternTable(dupPatternTable, currentGame, ADD)
 
                 updateResult(currentGame, currentGame.coupArray.size - 1)
-                updateResultTable(resultTable, currentGame, ADD)
+                updateResultTable(resultTable, ADD)
 
                 filter(gameArray, currentGame.coupArray)
 
@@ -268,7 +268,7 @@ class NewgameFragment2 : Fragment() {
                 updatePatternTable(patternTable, currentGame.coupArray, REMOVE)
                 updateDupPatternTable(dupPatternTable, currentGame, REMOVE)
 
-                updateResultTable(resultTable, currentGame, REMOVE)
+                updateResultTable(resultTable, REMOVE)
                 updatePredict(predictTable, nextCoupList)
 
                 if (resultArray.size > 0) {
@@ -350,8 +350,6 @@ class NewgameFragment2 : Fragment() {
                         currentGame = Game(loadGame(gameArrayWithoutOpened, openedGame))
                         OpenGame(scoreTable, resultTable, currentGame)
                         coupIndexText.text = "60"
-
-                        updateResultLabel(resultLabel)
 
                         dialog.dismiss()
 
@@ -732,7 +730,7 @@ class NewgameFragment2 : Fragment() {
         }
     }
 
-    private fun updateResultTable(table: TableLayout, game: Game, updateType: Int) {
+    private fun updateResultTable(table: TableLayout, updateType: Int) {
         if (resultArray.size > 0) {
 
             when (updateType) {
@@ -894,6 +892,24 @@ class NewgameFragment2 : Fragment() {
         totalLabel.setText(totalBuilder, TextView.BufferType.SPANNABLE)
     }
 
+    private fun clearDupPatternLabel() {
+
+        dupPatternLabel.text = ""
+        if (dupPatternPredictImg.drawable != null) {
+            var gd = dupPatternPredictImg.drawable as GradientDrawable
+            gd.setColor(Color.TRANSPARENT)
+        }
+    }
+
+    private fun clearResultLabel() {
+
+        resultLabel.text = ""
+        if (resultPredictImg.drawable != null) {
+            var gd = resultPredictImg.drawable as GradientDrawable
+            gd.setColor(Color.TRANSPARENT)
+        }
+    }
+
     private fun clearPredictLabel() {
 
         predictLabel.text = ""
@@ -918,11 +934,11 @@ class NewgameFragment2 : Fragment() {
                     nextCoupList.add(matchingGame.coupArray.get(nextCoupIndex))
             }
 
-            var filteredplayerCount = nextCoupList.filter { it.equals(0) }.size
-            var filteredbankerCount = nextCoupList.filter { it.equals(1) }.size
+            var playerCount = nextCoupList.filter { it.equals(0) }.size
+            var bankerCount = nextCoupList.filter { it.equals(1) }.size
 
 
-            while ((filteredplayerCount == filteredbankerCount) && filterSize > 1) {
+            while ((playerCount == bankerCount) && filterSize > 1) {
                 filterSize--
                 firstIndex = patternList.size - filterSize
                 filterPattern =
@@ -939,12 +955,16 @@ class NewgameFragment2 : Fragment() {
                         nextCoupList.add(matchingGame.coupArray.get(nextCoupIndex))
                 }
 
-                filteredplayerCount = nextCoupList.filter { it.equals(0) }.size
-                filteredbankerCount = nextCoupList.filter { it.equals(1) }.size
+                playerCount = nextCoupList.filter { it.equals(0) }.size
+                bankerCount = nextCoupList.filter { it.equals(1) }.size
             }
+
+            if (playerCount > bankerCount) nextCoupPredict = 0
+            else nextCoupPredict = 1
 
         } else {
             nextCoupList.clear()
+            nextCoupPredict = NOT_FOUND
         }
 
     }
@@ -997,8 +1017,10 @@ class NewgameFragment2 : Fragment() {
 
     private fun OpenGame(scoreTable: TableLayout, totalResultTable: TableLayout, game: Game) {
         updateScoreTable(scoreTable, game, REDRAW)
-        drawResultTable(totalResultTable)
+        //drawResultTable(totalResultTable)
         drawDupPatternTable(dupPatternTable)
+        updateResultLabel(resultLabel)
+        updateDupPatternLabel(dupPatternLabel)
     }
 
     /* private fun drawMatchTable(table: TableLayout) {
@@ -1060,44 +1082,21 @@ class NewgameFragment2 : Fragment() {
     // Draw a game result array to the table UI
     private fun drawResultTable(table: TableLayout) {
 
-        var currentResultArray = ArrayList<Int>()
-        var playerCount = 0
-        var bankerCount = 0
-        currentResultArray = resultArray
-
         rowIndex = 0
         colIndex = 0
 
         var i = 0
-        while (i < currentResultArray.size) {
+        while (i < resultArray.size) {
 
             val row = table.getChildAt(rowIndex) as TableRow
             val textView = row.getChildAt(colIndex) as TextView
             val background = textView.background as GradientDrawable
 
-            var result = currentResultArray[i]
+            var result = resultArray[i]
             textView.text = result.toString()
             if (result == 0) textView.setTextColor(Color.TRANSPARENT)
             else if (result > 0) textView.setTextColor(Color.RED)
             else textView.setTextColor(Color.BLACK)
-
-            var playerCount = 0
-            var bankerCount = 0
-            if (playerResultArray.size > 0) {
-                playerCount = playerResultArray[i]
-                bankerCount = bankerResultArray[i]
-
-                if ((playerCount == 0 || bankerCount == 0) && kotlin.math.abs(playerCount - bankerCount) > 0)
-                    background.setColor(resources.getColor(R.color.hasZero, null))
-                else {
-                    if (table.id == resultTable.id) {
-                        if (kotlin.math.abs(playerCount - bankerCount) > 4) {
-                            //background.setColor(resources.getColor(R.color.MAJORITY,null))
-                            background.setColor(resources.getColor(R.color.lightYellow, null))
-                        }
-                    }
-                }
-            }
 
             if (rowIndex < 2) rowIndex++
             else {
@@ -1116,10 +1115,9 @@ class NewgameFragment2 : Fragment() {
         colIndex = 0
         while (i < game.coupArray.size) {
             var patternList = ArrayList(game.coupArray.subList(0, i))
-
-            filter(gameArray, patternList)
             updateResult(game, i)
-
+            updateResultTable(resultTable, ADD)
+            filter(gameArray, patternList)
 
 
             patternList = ArrayList(game.coupArray.subList(0, i + 1))
@@ -1153,6 +1151,7 @@ class NewgameFragment2 : Fragment() {
         threeDiffArray.add(threeDiff)
         sameNextCoupArray.add(sameNextCoup)
 
+
         onlyOneMatch = false
         threeDiff = false
         sameNextCoup = false
@@ -1182,14 +1181,8 @@ class NewgameFragment2 : Fragment() {
             }
             else filterSize++
 
-
-            var filterPredict = 0
-
-            if (playerCount > bankerCount) filterPredict = 0
-            else filterPredict = 1
-
             // actual added coup match prediction
-            if (filterPredict == game.coupArray[currentIndex]) {
+            if (nextCoupPredict == game.coupArray[currentIndex]) {
                 resultArray.add(1)
 
             }
@@ -1253,10 +1246,8 @@ class NewgameFragment2 : Fragment() {
 
     private fun clearLabels() {
         coupIndexText.text = ""
-        dupPatternLabel.text = ""
-        var gd = dupPatternPredictImg.drawable as GradientDrawable
-        gd.setColor(Color.TRANSPARENT)
-        resultLabel.text = ""
+        clearDupPatternLabel()
+        clearResultLabel()
         clearPredictLabel()
     }
 
@@ -1278,6 +1269,15 @@ class NewgameFragment2 : Fragment() {
         textView.text = "${totalResult}"
         if (totalResult > 0) textView.setTextColor(Color.RED)
         else textView.setTextColor(Color.BLACK)
+
+        val gd = GradientDrawable()
+        gd.shape = GradientDrawable.OVAL
+        gd.setSize(60, 60)
+        if (nextCoupPredict == 0) gd.setColor(Color.BLUE)
+        else if (nextCoupPredict == 1) gd.setColor(Color.RED)
+        else gd.setColor(Color.TRANSPARENT)
+
+        resultPredictImg.setImageDrawable(gd)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -1313,6 +1313,6 @@ class NewgameFragment2 : Fragment() {
         currentGame = Game(loadGame(gameArray, game))
         OpenGame(scoreTable,resultTable, currentGame)
         coupIndexText.text = "60"
-        updateResultLabel(resultLabel)
+
     }
 }
