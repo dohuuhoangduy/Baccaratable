@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.dhd.baccaratable.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_boardanalysis"
+        android:name="com.dhd.baccaratable.ui.boardanalysis.BoardAnalysisFragment"
+        android:label="@string/menu_boardanalysis"
+        tools:layout="@layout/fragment_boardanalysis" />
+
+    <fragment
+        android:id="@+id/nav_groupanalysis"
+        android:name="com.dhd.baccaratable.ui.newgame.NewgameFragment"
+        android:label="@string/menu_groupanalysis"
+        tools:layout="@layout/fragment_newgame" />
+
+    <fragment
+        android:id="@+id/nav_newgame2"
+        android:name="com.dhd.baccaratable.ui.newgame2.NewgameFragment2"
+        android:label="New Game 2"
+        tools:layout="@layout/fragment_newgame2" />
+
+    <fragment
+        android:id="@+id/nav_tools"
+        android:name="com.dhd.baccaratable.ui.tools.ToolsFragment"
+        android:label="@string/menu_tools"
+        tools:layout="@layout/fragment_tools" />
+
+    <fragment
+        android:id="@+id/nav_share"
+        android:name="com.dhd.baccaratable.ui.share.ShareFragment"
+        android:label="@string/menu_share"
+        tools:layout="@layout/fragment_share" />
+
+    <fragment
+        android:id="@+id/nav_send"
+        android:name="com.dhd.baccaratable.ui.send.SendFragment"
+        android:label="@string/menu_send"
+        tools:layout="@layout/fragment_send" />
+</navigation>

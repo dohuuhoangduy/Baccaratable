@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="PLAYER">#0000FF</color>
+    <color name="BANKER">#FF0000</color>
+    <color name="WHITE">#FFFFFF</color>
+    <color name="RIGHT">#54B948</color>
+    <color name="WRONG1">#772120</color>
+    <color name="WRONG">#654321</color>
+    <color name="MAJORITY1">#efefc8</color>
+    <color name="MAJORITY">#EEC3D0</color>
+    <color name="PINK">#EEC3D0</color>
+    <color name="GREEN">#54B948</color>
+    <color name="BROWN">#772120</color>
+    <color name="duplicatePattern">#C2E8CE</color>
+    <color name="hasZero">#d0e1f9</color>
+    <color name="lightYellow">#fdf498</color>
+    <color name="lightBlue">#add8e6</color>
+    <color name="lightGreen">#C2E8CE</color>
+</resources>
