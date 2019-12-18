@@ -1068,6 +1068,7 @@ class NewgameFragment2 : Fragment() {
             var result = dupPatternResultArray[i]
             textView.text = result.toString()
             if (result == 0) textView.setTextColor(Color.TRANSPARENT)
+            else if (result > 0) textView.setTextColor(Color.RED)
             else textView.setTextColor(Color.BLACK)
 
             if (rowIndex < 2) rowIndex++
