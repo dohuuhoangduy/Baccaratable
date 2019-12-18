@@ -1115,13 +1115,12 @@ class NewgameFragment2 : Fragment() {
         rowIndex = 0
         colIndex = 0
         while (i < game.coupArray.size) {
-            var patternList = ArrayList(game.coupArray.subList(0, i))
+            //var patternList = ArrayList(game.coupArray.subList(0, i))    
+
+            var patternList = ArrayList(game.coupArray.subList(0, i + 1))
             updateResult(game, i)
             updateResultTable(resultTable, ADD)
             filter(gameArray, patternList)
-
-
-            patternList = ArrayList(game.coupArray.subList(0, i + 1))
             updatePatternTable(patternTable, patternList, ADD)
 
             i++
