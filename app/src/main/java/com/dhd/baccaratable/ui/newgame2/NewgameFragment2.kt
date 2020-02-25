@@ -1253,6 +1253,8 @@ class NewgameFragment2 : Fragment() {
 
     private fun updateDupPatternLabel(textView: TextView) {
         textView.text = dupPatternTotal.toString()
+        if (dupPatternTotal > 0) textView.setTextColor(Color.RED)
+        else textView.setTextColor(Color.BLACK)
 
         val gd = GradientDrawable()
         gd.shape = GradientDrawable.OVAL
