@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.fragment_newgame.resultTable
 import kotlinx.android.synthetic.main.fragment_newgame2.*
 import java.io.*
 import androidx.core.content.FileProvider
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.children
 import androidx.lifecycle.ViewModelProvider
 import com.dhd.baccaratable.BuildConfig
@@ -116,6 +117,7 @@ class NewgameFragment2 : Fragment() {
             editor.apply()
         }
 
+        val indexTable = root.findViewById<TableLayout>(R.id.indexTable)
         val scoreTable = root.findViewById<TableLayout>(R.id.scoreTable)
         val patternTable = root.findViewById<TableLayout>(R.id.patternTable)
         val dupPatternTable = root.findViewById<TableLayout>(R.id.dupPatternTable)
@@ -142,6 +144,7 @@ class NewgameFragment2 : Fragment() {
 
 
         drawTable(scoreTable, GradientDrawable.OVAL, 20, false, 96)
+        drawIndexTable(indexTable)
         drawTextTable(patternTable)
         drawTextTable(dupPatternTable)
         drawTextTable(resultTable)
@@ -471,11 +474,27 @@ class NewgameFragment2 : Fragment() {
                 image.setImageDrawable(gd)
                 image.setPadding(8, 8, 8, 8)
 
-                var border = GradientDrawable()
-                border.setColor(Color.parseColor("#FFFFFF"))
-                border.setStroke(1, Color.parseColor("#000000"))
-                if (size > 0) border.setSize(size, size)
-                image.background = border
+                when (i) {
+                    0 -> {
+                        if (j%2 == 0) image.background = ResourcesCompat.getDrawable(getResources(), R.drawable.first_row_border_left, null)
+                        else image.background = ResourcesCompat.getDrawable(getResources(), R.drawable.first_row_border_right, null)
+                    }
+                    1 -> {
+                        if (j%2 == 0) image.background = ResourcesCompat.getDrawable(getResources(), R.drawable.second_row_border_left, null)
+                        else image.background = ResourcesCompat.getDrawable(getResources(), R.drawable.second_row_border_right, null)
+                    }
+                    2 -> {
+                        if (j%2 == 0) image.background = ResourcesCompat.getDrawable(getResources(), R.drawable.third_row_border_left, null)
+                        else image.background = ResourcesCompat.getDrawable(getResources(), R.drawable.third_row_border_right, null)
+                    }
+                }
+
+
+                //var border = GradientDrawable()
+                //border.setColor(Color.parseColor("#FFFFFF"))
+                //border.setStroke(1, Color.parseColor("#000000"))
+                //if (size > 0) border.setSize(size, size)
+                //image.background = border
 
                 row.addView(image)
                 j++
@@ -483,6 +502,30 @@ class NewgameFragment2 : Fragment() {
             i++
         }
         table.isStretchAllColumns = stretch
+    }
+
+    private fun drawIndexTable(table: TableLayout) {
+        var row = table.getChildAt(0) as TableRow
+        var i = 1
+        var j = 1
+        while (i <= 20) {
+            val textView = TextView(this.context)
+            if (i > 1) j += 3
+            textView.text = "$j"
+            textView.gravity = Gravity.CENTER
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22f)
+            textView.setTypeface(null, Typeface.BOLD)
+
+            var border = GradientDrawable()
+            border.setColor(Color.parseColor("#FFFFFF"))
+            //border.setStroke(1, Color.parseColor("#000000"))
+            border.setSize(96, 96)
+
+            textView.background = border
+
+            row.addView(textView)
+            i++
+        }
     }
 
     private fun drawTextTable(table: TableLayout) {
@@ -500,7 +543,7 @@ class NewgameFragment2 : Fragment() {
                 var border = GradientDrawable()
                 border.setColor(Color.parseColor("#FFFFFF"))
                 border.setStroke(1, Color.parseColor("#000000"))
-                border.setSize(96, 96)
+                border.setSize(96,96)
 
                 textView.background = border
 
@@ -825,8 +868,8 @@ class NewgameFragment2 : Fragment() {
         val gd = image.drawable as GradientDrawable
         gd.color = null
         gd.setVisible(false, true)
-        val imageBackground = image.background as GradientDrawable
-        imageBackground.setColor(Color.parseColor("#FFFFFF"))
+        //val imageBackground = image.background as GradientDrawable
+        //imageBackground.setColor(Color.parseColor("#FFFFFF"))
     }
 
     private fun removeLastText(table: TableLayout) {
